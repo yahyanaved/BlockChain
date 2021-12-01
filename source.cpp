@@ -1,5 +1,8 @@
 #include<iostream>
 #include<thread>
+#include<fstream>
+#include"json.hpp"
+using json = nlohmann::json;
 using namespace std;
 int miner = -1;
 int answer = -1;
@@ -83,6 +86,15 @@ void puzzle()
 }
 int main()
 {
-    puzzle();
-    cout << miner;
+    json obj;
+    obj["Name"] = "YAHYA NAVED";
+    obj["Data"] = "dog";
+    fstream fileptr1;
+    fileptr1.open("miner1.txt", ios::in);
+    fstream fileptr2;
+    fileptr2.open("miner2.txt", ios::app);
+    fstream fileptr3;
+    fileptr3.open("miner3.txt", ios::app);
+    fileptr2 << setw(4) << obj;
+    cout << obj;
 }

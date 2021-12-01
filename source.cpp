@@ -6,6 +6,7 @@ using json = nlohmann::json;
 using namespace std;
 int miner = -1;
 int answer = -1;
+int var = 0;
 class jar
 {
 public:
@@ -31,6 +32,13 @@ int randoms(int min, int max)
     }
     return min + rand() % ((max + 1) - min);
 }
+void verify(jar * obj)
+{
+    if (obj[answer].pillsweight == 9)
+    {
+        var++;
+    }
+}
 void p1(jar* obj, long noofjars, int a)
 {
     long sum = 0;
@@ -47,10 +55,11 @@ void p1(jar* obj, long noofjars, int a)
     if (miner == -1)
     {
         miner = a;
-    }
-    if (answer == -1)
-    {
         answer = index;
+    }
+    else
+    {
+        verify(obj);
     }
 }
 jar* pill(long &noofjars)
@@ -84,17 +93,32 @@ void puzzle()
     t3.join();
 
 }
+void datapool(json &obj)
+{
+    puzzle();
+    fstream fileptr;
+    if (var == 2)
+    {
+        switch (miner)
+        {
+            case 1:
+                fileptr.open("miner1.txt", ios::in);
+                fileptr << setw(4) << obj << endl;
+            case 2:
+                fileptr.open("miner2.txt", ios::in);
+                fileptr << setw(4) << obj << endl;
+            case 3:
+                fileptr.open("miner3.txt", ios::in);
+                fileptr << setw(4) << obj << endl;
+    
+        };
+    }
+    miner = -1;
+    answer = -1;
+    var = 0;
+}
 int main()
 {
     json obj;
-    obj["Name"] = "YAHYA NAVED";
-    obj["Data"] = "dog";
-    fstream fileptr1;
-    fileptr1.open("miner1.txt", ios::in);
-    fstream fileptr2;
-    fileptr2.open("miner2.txt", ios::app);
-    fstream fileptr3;
-    fileptr3.open("miner3.txt", ios::app);
-    fileptr2 << setw(4) << obj;
     cout << obj;
 }

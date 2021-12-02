@@ -194,13 +194,20 @@ public:
     {
         int temp, count = 0;
         ifstream rewards("rewards.txt");
-        while (!rewards.eof())
+        if (rewards.is_open())
         {
-            rewards >> temp;
-            if (temp == x)
+            while (!rewards.eof())
             {
-                count++;
+                rewards >> temp;
+                if (temp == x)
+                {
+                    count++;
+                }
             }
+        }
+        else
+        {
+            return;
         }
         cout << "REWARDS OF MINER" << x << " : " << count;
     }
@@ -210,6 +217,6 @@ int main()
 {
     json obj;
     mining m(3);
-   // m.takeinput(obj);
+    m.takeinput(obj);
     m.getrewards(1);
 }

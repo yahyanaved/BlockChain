@@ -3,12 +3,21 @@
 #include<string>
 #include<fstream>
 #include<ctime>
+#include<chrono>
 #include"json.hpp"
 using json = nlohmann::json;
 using namespace std;
 int miner = -1;
 int answer = -1;
 int var = 0;
+string NowToString()
+{
+    chrono::system_clock::time_point p = chrono::system_clock::now();
+    time_t t = chrono::system_clock::to_time_t(p);
+    char str[26];
+    ctime_s(str, sizeof str, &t);
+    return str;
+}
 class jar
 {
 public:
@@ -36,10 +45,11 @@ int randoms(int min, int max)
 }
 void verify(jar * obj)
 {
-    if (obj[answer].pillsweight == 9)
+    if (obj[answer-1].pillsweight == 9)
     {
         var++;
     }
+
 }
 void p1(jar* obj, long noofjars, int a)
 {
@@ -67,11 +77,11 @@ void p1(jar* obj, long noofjars, int a)
 jar* pill(long &noofjars)
 {
     noofjars = randoms(100000, 150000);
-    long seed = randoms(0, noofjars-1);
+    long nonce = randoms(0, noofjars-1);
     jar* jars = new jar[noofjars];
     for (long i = 0; i < noofjars;i++)
     {
-        if (i == seed)
+        if (i == nonce)
         {
             jars[i].input(150000, 9);
         }
@@ -97,6 +107,7 @@ void puzzle()
 }
 void datapool(json &obj)
 {
+    int noofminers = 3;
     puzzle();
     fstream fileptr;
     fstream filereward;
@@ -104,22 +115,43 @@ void datapool(json &obj)
     string temp = to_string(miner);
     string temp1 = ".txt";
     filename += temp + temp1;
-    time_t now = time(0);
-    string dt = ctime(&now);
-    if (var == 2)
+    if (var == noofminers-1)
     {
         fileptr.open(filename, ios::app);
         fileptr << obj << endl;
         fileptr.close();
         filereward.open("rewards.txt", ios::app);
         filereward << miner << endl;
+        filereward.close();
     }
     miner = -1;
     answer = -1;
     var = 0;
 }
+void takeinput(json &obj)
+{
+    fstream fileptr;int count=0;
+    fileptr.open("input.json", ios::in);
+    string time;
+    if (fileptr.is_open())
+    {
+        while (!fileptr.eof())
+        {
+            time = NowToString();
+            fileptr >> obj;
+            obj["Time"] = time;
+            datapool(obj);
+            if (fileptr.peek()==EOF)
+            {
+                break;
+            }
+        }
+    }
+    fileptr.close();
+
+}
 int main()
 {
     json obj;
-    datapool(obj);
+    takeinput(obj);
 }

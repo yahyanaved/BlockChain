@@ -1,6 +1,8 @@
 #include<iostream>
 #include<thread>
+#include<string>
 #include<fstream>
+#include<ctime>
 #include"json.hpp"
 using json = nlohmann::json;
 using namespace std;
@@ -10,7 +12,7 @@ int var = 0;
 class jar
 {
 public:
-    int noofpills;
+    long noofpills;
     int pillsweight;
     jar()
     {
@@ -71,11 +73,11 @@ jar* pill(long &noofjars)
     {
         if (i == seed)
         {
-            jars[i].input(100, 9);
+            jars[i].input(150000, 9);
         }
         else
         {
-            jars[i].input(100, 10);
+            jars[i].input(150000, 10);
         }
     }
     return jars;
@@ -97,21 +99,20 @@ void datapool(json &obj)
 {
     puzzle();
     fstream fileptr;
+    fstream filereward;
+    string filename = "miner";
+    string temp = to_string(miner);
+    string temp1 = ".txt";
+    filename += temp + temp1;
+    time_t now = time(0);
+    string dt = ctime(&now);
     if (var == 2)
     {
-        switch (miner)
-        {
-            case 1:
-                fileptr.open("miner1.txt", ios::in);
-                fileptr << setw(4) << obj << endl;
-            case 2:
-                fileptr.open("miner2.txt", ios::in);
-                fileptr << setw(4) << obj << endl;
-            case 3:
-                fileptr.open("miner3.txt", ios::in);
-                fileptr << setw(4) << obj << endl;
-    
-        };
+        fileptr.open(filename, ios::app);
+        fileptr << obj << endl;
+        fileptr.close();
+        filereward.open("rewards.txt", ios::app);
+        filereward << miner << endl;
     }
     miner = -1;
     answer = -1;
@@ -120,5 +121,5 @@ void datapool(json &obj)
 int main()
 {
     json obj;
-    cout << obj;
+    datapool(obj);
 }

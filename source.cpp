@@ -64,11 +64,17 @@ public:
         long sum = 0;
         for (long i = 0; i < noofjars;i++)
         {
+            if(miner != -1)
+               {
+                   break;
+                }
             sum = sum + (obj[i].pillsweight * (i + 1));
         }
         long actualsum = 0;
         for (long i = 0;i < noofjars;i++)
         {
+            if(miner!=-1)
+                break;
             actualsum = actualsum + ((i + 1) * 10);
         }
         long index = actualsum - sum;
